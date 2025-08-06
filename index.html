@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diagnóstico Empresarial - Entrevista Interativa</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            margin-top: 30px;
+            margin-bottom: 30px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        h1 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: var(--secondary-color);
+            font-size: 1.1em;
+        }
+        
+        .progress-container {
+            width: 100%;
+            background-color: #f1f1f1;
+            border-radius: 5px;
+            margin-bottom: 30px;
+        }
+        
+        .progress-bar {
+            height: 10px;
+            background-color: var(--secondary-color);
+            border-radius: 5px;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        
+        .form-section {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .form-section.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .section-title {
+            color: var(--primary-color);
+            margin-top: 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--secondary-color);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+        
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            transition: border 0.3s;
+        }
+        
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="tel"]:focus,
+        textarea:focus,
+        select:focus {
+            border-color: var(--secondary-color);
+            outline: none;
+            box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
+        }
+        
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: #2980b9;
+        }
+        
+        .btn-secondary {
+            background-color: #95a5a6;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #7f8c8d;
+        }
+        
+        .btn-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+        
+        .nav-dots {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        
+        .dot {
+            width: 12px;
+            height: 12px;
+            margin: 0 5px;
+            background-color: #bbb;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .dot.active {
+            background-color: var(--secondary-color);
+        }
+        
+        .required:after {
+            content: " *";
+            color: var(--accent-color);
+        }
+        
+        .summary-section {
+            display: none;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            margin-top: 30px;
+        }
+        
+        .summary-section h3 {
+            color: var(--primary-color);
+            margin-top: 0;
+        }
+        
+        .summary-item {
+            margin-bottom: 15px;
+        }
+        
+        .summary-item strong {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--dark-color);
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                padding: 15px;
+            }
+            
+            .btn {
+                padding: 10px 15px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Diagnóstico Empresarial</h1>
+            <p class="subtitle">Preencha o formulário para gerar um relatório completo sobre sua empresa</p>
+        </header>
+        
+        <div class="progress-container">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+        
+        <form id="businessForm">
+            <!-- Seção 1: Informações Básicas -->
+            <div class="form-section active" id="section1">
+                <h2 class="section-title">Informações Básicas</h2>
+                
+                <div class="form-group">
+                    <label for="companyName" class="required">Nome da Empresa</label>
+                    <input type="text" id="companyName" name="companyName" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="contactName">Nome do Responsável</label>
+                    <input type="text" id="contactName" name="contactName">
+                </div>
+                
+                <div class="form-group">
+                    <label for="phone" class="required">Telefone de Contato</label>
+                    <input type="tel" id="phone" name="phone" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email" class="required">E-mail de Contato</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="businessSegment">Segmento de Atuação</label>
+                    <input type="text" id="businessSegment" name="businessSegment">
+                </div>
+                
+                <div class="form-group">
+                    <label for="timeInMarket">Tempo de Mercado (anos)</label>
+                    <input type="text" id="timeInMarket" name="timeInMarket">
+                </div>
+                
+                <div class="btn-container">
+                    <button type="button" class="btn" onclick="nextSection()">Próxima Seção</button>
+                </div>
+            </div>
+            
+            <!-- Seção 2: Missão, Visão e Valores -->
+            <div class="form-section" id="section2">
+                <h2 class="section-title">Missão, Visão e Valores</h2>
+                
+                <div class="form-group">
+                    <label for="mission">Qual é a missão da empresa?</label>
+                    <textarea id="mission" name="mission"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="vision">Qual é a visão da empresa?</label>
+                    <textarea id="vision" name="vision"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="values">Quais são os valores da empresa?</label>
+                    <textarea id="values" name="values"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="marketProblem">Qual problema de mercado sua empresa resolve?</label>
+                    <textarea id="marketProblem" name="marketProblem"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="competitors">Quem são seus principais concorrentes?</label>
+                    <textarea id="competitors" name="competitors"></textarea>
+                </div>
+                
+                <div class="btn-container">
+                    <button type="button" class="btn btn-secondary" onclick="prevSection()">Voltar</button>
+                    <button type="button" class="btn" onclick="nextSection()">Próxima Seção</button>
+                </div>
+            </div>
+            
+            <!-- Seção 3: Modelo de Negócios -->
+            <div class="form-section" id="section3">
+                <h2 class="section-title">Modelo de Negócios</h2>
+                
+                <div class="form-group">
+                    <label for="revenueModel">Qual é o modelo de receita da empresa?</label>
+                    <textarea id="revenueModel" name="revenueModel"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="strategicObjectives">Quais são os objetivos estratégicos para os próximos 12 meses?</label>
+                    <textarea id="strategicObjectives" name="strategicObjectives"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="differentiation">O que diferencia sua empresa da concorrência?</label>
+                    <textarea id="differentiation" name="differentiation"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="keyResources">Quais são os recursos-chave necessários para o seu negócio?</label>
+                    <textarea id="keyResources" name="keyResources"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="keyPartners">Quem são seus parceiros-chave?</label>
+                    <textarea id="keyPartners" name="keyPartners"></textarea>
+                </div>
+                
+                <div class="btn-container">
+                    <button type="button" class="btn btn-secondary" onclick="prevSection()">Voltar</button>
+                    <button type="button" class="btn" onclick="nextSection()">Próxima Seção</button>
+                </div>
+            </div>
+            
+            <!-- Seção 4: Estratégias de Vendas -->
+            <div class="form-section" id="section4">
+                <h2 class="section-title">Estratégias de Vendas e Market Share</h2>
+                
+                <div class="form-group">
+                    <label for="salesChannels">Quais canais de venda são utilizados atualmente?</label>
+                    <textarea id="salesChannels" name="salesChannels"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="pricingStrategy">Qual é a estratégia de precificação dos produtos/serviços?</label>
+                    <textarea id="pricingStrategy" name="pricingStrategy"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="marketPosition">Como sua empresa se posiciona frente à concorrência?</label>
+                    <textarea id="marketPosition" name="marketPosition"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="customerAcquisition">Quais ações são realizadas para conquistar novos clientes?</label>
+                    <textarea id="customerAcquisition" name="customerAcquisition"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="marketShare">Existe alguma meta de participação de mercado (market share)? Se sim, qual?</label>
+                    <textarea id="marketShare" name="marketShare"></textarea>
+                </div>
+                
+                <div class="btn-container">
+                    <button type="button" class="btn btn-secondary" onclick="prevSection()">Voltar</button>
+                    <button type="button" class="btn" onclick="nextSection()">Próxima Seção</button>
+                </div>
+            </div>
+            
+            <!-- Seção 5: Gestão Financeira -->
+            <div class="form-section" id="section5">
+                <h2 class="section-title">Gestão Financeira</h2>
+                
+                <div class="form-group">
+                    <label for="financialPlanning">A empresa possui planejamento financeiro estruturado?</label>
+                    <select id="financialPlanning" name="financialPlanning">
+                        <option value="">Selecione...</option>
+                        <option value="Sim, completo">Sim, completo</option>
+                        <option value="Parcialmente">Parcialmente</option>
+                        <option value="Não">Não</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="financialIndicators">Quais são os principais indicadores financeiros acompanhados?</label>
+                    <textarea id="financialIndicators" name="financialIndicators"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="cashFlow">Existe controle de fluxo de caixa? Com que frequência é atualizado?</label>
+                    <textarea id="cashFlow" name="cashFlow"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="financialReserves">Há reservas financeiras ou fundos de emergência?</label>
+                    <select id="financialReserves" name="financialReserves">
+                        <option value="">Selecione...</option>
+                        <option value="Sim">Sim</option>
+                        <option value="Não">Não</option>
+                        <option value="Em construção">Em construção</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="financialChallenges">Quais são os maiores desafios financeiros enfrentados atualmente?</label>
+                    <textarea id="financialChallenges" name="financialChallenges"></textarea>
+                </div>
+                
+                <div class="btn-container">
+                    <button type="button" class="btn btn-secondary" onclick="prevSection()">Voltar</button>
+                    <button type="button" class="btn" onclick="nextSection()">Próxima Seção</button>
+                </div>
+            </div>
+            
+            <!-- Seção 6: Gestão da Qualidade -->
+            <div class="form-section" id="section6">
+                <h2 class="section-title">Gestão da Qualidade</h2>
+                
+                <div class="form-group">
+                    <label for="qualityCertifications">Existem padrões ou certificações de qualidade adotados pela empresa?</label>
+                    <textarea id="qualityCertifications" name="qualityCertifications"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="qualityControl">Como é feito o controle de qualidade dos produtos ou serviços?</label>
+                    <textarea id="qualityControl" name="qualityControl"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="customerSatisfaction">Há indicadores de satisfação do cliente? Como são medidos?</label>
+                    <textarea id="customerSatisfaction" name="customerSatisfaction"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="qualityProblems">Quais são os principais problemas de qualidade enfrentados?</label>
+                    <textarea id="qualityProblems" name="qualityProblems"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="qualityAudits">A empresa realiza auditorias ou revisões periódicas de processos?</label>
+                    <select id="qualityAudits" name="qualityAudits">
+                        <option value="">Selecione...</option>
+                        <option value="Sim, regularmente">Sim, regularmente</option>
+                        <option value="Ocasionalmente">Ocasionalmente</option>
+                        <option value="Não">Não</option>
+                    </select>
+                </div>
+                
+                <div class="btn-container">
+                    <button type="button" class="btn btn-secondary" onclick="prevSection()">Voltar</button>
+                    <button type="button" class="btn" onclick="nextSection()">Próxima Seção</button>
+                </div>
+            </div>
+            
+            <!-- Seção 7: Processo Produtivo -->
+            <div class="form-section" id="section7">
+                <h2 class="section-title">Processo Produtivo</h2>
+                
+                <div class="form-group">
+                    <label for="productionProcess">Quais são as etapas principais do processo produtivo?</label>
+                    <textarea id="productionProcess" name="productionProcess"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="processDocumentation">Existe documentação ou mapeamento dos processos?</label>
+                    <select id="processDocumentation" name="processDocumentation">
+                        <option value="">Selecione...</option>
+                        <option value="Sim, completo">Sim, completo</option>
+                        <option value="Parcial">Parcial</option>
+                        <option value="Não">Não</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="automation">Há uso de tecnologia ou automação na produção?</label>
+                    <textarea id="automation" name="automation"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="bottlenecks">Quais são os principais gargalos ou ineficiências?</label>
+                    <textarea id="bottlenecks" name="bottlenecks"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="inventoryManagement">Como é feita a gestão de estoque e logística?</label>
+                    <textarea id="inventoryManagement" name="inventoryManagement"></textarea>
+                </div>
+                
+                <div class="btn-container">
+                    <button type="button" class="btn btn-secondary" onclick="prevSection()">Voltar</button>
+                    <button type="button" class="btn" onclick="nextSection()">Próxima Seção</button>
+                </div>
+            </div>
+            
+            <!-- Seção 8: Resumo e Finalização -->
+            <div class="form-section" id="section8">
+                <h2 class="section-title">Resumo e Finalização</h2>
+                
+                <div class="summary-section" id="summarySection">
+                    <h3>Resumo das Informações</h3>
+                    <!-- O conteúdo será preenchido dinamicamente pelo JavaScript -->
+                </div>
+                
+                <div class="form-group">
+                    <label for="finalComments">Alguma observação ou comentário adicional que gostaria de incluir?</label>
+                    <textarea id="finalComments" name="finalComments"></textarea>
+                </div>
+                
+                <div class="btn-container">
+                    <button type="button" class="btn btn-secondary" onclick="prevSection()">Voltar</button>
+                    <button type="button" class="btn" onclick="generatePDF()">Gerar Relatório PDF</button>
+                </div>
+            </div>
+        </form>
+        
+        <div class="nav-dots" id="navDots">
+            <!-- Os pontos de navegação serão adicionados dinamicamente pelo JavaScript -->
+        </div>
+    </div>
+
+    <script>
+        // Configuração das seções
+        const totalSections = 8;
+        let currentSection = 1;
+        
+        // Inicializa os pontos de navegação
+        const navDots = document.getElementById('navDots');
+        for (let i = 1; i <= totalSections; i++) {
+            const dot = document.createElement('div');
+            dot.className = 'dot';
+            dot.dataset.section = i;
+            dot.addEventListener('click', function() {
+                goToSection(parseInt(this.dataset.section));
+            });
+            navDots.appendChild(dot);
+        }
+        
+        // Atualiza a navegação
+        function updateNavigation() {
+            // Atualiza a barra de progresso
+            const progress = (currentSection / totalSections) * 100;
+            document.getElementById('progressBar').style.width = `${progress}%`;
+            
+            // Atualiza os pontos de navegação
+            const dots = document.querySelectorAll('.dot');
+            dots.forEach(dot => {
+                dot.classList.remove('active');
+                if (parseInt(dot.dataset.section) === currentSection) {
+                    dot.classList.add('active');
+                }
+            });
+        }
+        
+        // Navega para a próxima seção
+        function nextSection() {
+            if (validateCurrentSection()) {
+                if (currentSection < totalSections) {
+                    document.getElementById(`section${currentSection}`).classList.remove('active');
+                    currentSection++;
+                    document.getElementById(`section${currentSection}`).classList.add('active');
+                    
+                    // Se chegou na última seção, mostra o resumo
+                    if (currentSection === totalSections) {
+                        showSummary();
+                    }
+                    
+                    updateNavigation();
+                    window.scrollTo(0, 0);
+                }
+            }
+        }
+        
+        // Navega para a seção anterior
+        function prevSection() {
+            if (currentSection > 1) {
+                document.getElementById(`section${currentSection}`).classList.remove('active');
+                currentSection--;
+                document.getElementById(`section${currentSection}`).classList.add('active');
+                updateNavigation();
+                window.scrollTo(0, 0);
+            }
+        }
+        
+        // Navega para uma seção específica
+        function goToSection(sectionNumber) {
+            if (sectionNumber >= 1 && sectionNumber <= totalSections) {
+                document.getElementById(`section${currentSection}`).classList.remove('active');
+                currentSection = sectionNumber;
+                document.getElementById(`section${currentSection}`).classList.add('active');
+                
+                if (currentSection === totalSections) {
+                    showSummary();
+                }
+                
+                updateNavigation();
+                window.scrollTo(0, 0);
+            }
+        }
+        
+        // Valida os campos obrigatórios da seção atual
+        function validateCurrentSection() {
+            if (currentSection === 1) {
+                const companyName = document.getElementById('companyName').value.trim();
+                const phone = document.getElementById('phone').value.trim();
+                const email = document.getElementById('email').value.trim();
+                
+                if (!companyName || !phone || !email) {
+                    alert('Por favor, preencha os campos obrigatórios da seção.');
+                    return false;
+                }
+            }
+            return true;
+        }
+        
+        // Mostra o resumo das informações
+        function showSummary() {
+            const summarySection = document.getElementById('summarySection');
+            summarySection.innerHTML = '<h3>Resumo das Informações</h3>';
+            
+            // Coleta todos os dados do formulário
+            const formData = new FormData(document.getElementById('businessForm'));
+            const data = {};
+            
+            for (const [key, value] of formData.entries()) {
+                if (value.trim() !== '') {
+                    data[key] = value;
+                }
+            }
+            
+            // Adiciona os itens ao resumo
+            for (const key in data) {
+                const div = document.createElement('div');
+                div.className = 'summary-item';
+                
+                const strong = document.createElement('strong');
+                strong.textContent = getLabelText(key) + ':';
+                div.appendChild(strong);
+                
+                const span = document.createElement('span');
+                span.textContent = data[key];
+                div.appendChild(span);
+                
+                summarySection.appendChild(div);
+            }
+        }
+        
+        // Obtém o texto do label para cada campo
+        function getLabelText(fieldName) {
+            const labels = {
+                'companyName': 'Nome da Empresa',
+                'contactName': 'Nome do Responsável',
+                'phone': 'Telefone de Contato',
+                'email': 'E-mail de Contato',
+                'businessSegment': 'Segmento de Atuação',
+                'timeInMarket': 'Tempo de Mercado',
+                'mission': 'Missão da Empresa',
+                'vision': 'Visão da Empresa',
+                'values': 'Valores da Empresa',
+                'marketProblem': 'Problema de Mercado Resolvido',
+                'competitors': 'Principais Concorrentes',
+                'revenueModel': 'Modelo de Receita',
+                'strategicObjectives': 'Objetivos Estratégicos (12 meses)',
+                'differentiation': 'Diferenciação Competitiva',
+                'keyResources': 'Recursos-Chave',
+                'keyPartners': 'Parceiros-Chave',
+                'salesChannels': 'Canais de Venda',
+                'pricingStrategy': 'Estratégia de Precificação',
+                'marketPosition': 'Posicionamento no Mercado',
+                'customerAcquisition': 'Aquisição de Novos Clientes',
+                'marketShare': 'Meta de Market Share',
+                'financialPlanning': 'Planejamento Financeiro',
+                'financialIndicators': 'Indicadores Financeiros',
+                'cashFlow': 'Controle de Fluxo de Caixa',
+                'financialReserves': 'Reservas Financeiras',
+                'financialChallenges': 'Desafios Financeiros',
+                'qualityCertifications': 'Certificações de Qualidade',
+                'qualityControl': 'Controle de Qualidade',
+                'customerSatisfaction': 'Satisfação do Cliente',
+                'qualityProblems': 'Problemas de Qualidade',
+                'qualityAudits': 'Auditorias de Qualidade',
+                'productionProcess': 'Processo Produtivo',
+                'processDocumentation': 'Documentação de Processos',
+                'automation': 'Automação na Produção',
+                'bottlenecks': 'Gargalos ou Ineficiências',
+                'inventoryManagement': 'Gestão de Estoque e Logística',
+                'finalComments': 'Observações Adicionais'
+            };
+            
+            return labels[fieldName] || fieldName;
+        }
+        
+        // Gera o PDF
+        function generatePDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            // Configurações do PDF
+            doc.setFont('helvetica');
+            doc.setFontSize(16);
+            
+            // Título do relatório
+            const companyName = document.getElementById('companyName').value.trim() || 'Empresa';
+            doc.text(`Relatório de Diagnóstico: ${companyName}`, 105, 20, { align: 'center' });
+            
+            doc.setFontSize(12);
+            doc.text('Gerado em: ' + new Date().toLocaleDateString(), 105, 30, { align: 'center' });
+            
+            // Linha divisória
+            doc.setDrawColor(200, 200, 200);
+            doc.line(20, 35, 190, 35);
+            
+            // Adiciona as informações ao PDF
+            let yPosition = 45;
+            const formData = new FormData(document.getElementById('businessForm'));
+            const data = {};
+            
+            for (const [key, value] of formData.entries()) {
+                if (value.trim() !== '') {
+                    data[key] = value;
+                }
+            }
+            
+            // Organiza por seções
+            const sections = {
+                'Informações Básicas': ['companyName', 'contactName', 'phone', 'email', 'businessSegment', 'timeInMarket'],
+                'Missão, Visão e Valores': ['mission', 'vision', 'values', 'marketProblem', 'competitors'],
+                'Modelo de Negócios': ['revenueModel', 'strategicObjectives', 'differentiation', 'keyResources', 'keyPartners'],
+                'Estratégias de Vendas': ['salesChannels', 'pricingStrategy', 'marketPosition', 'customerAcquisition', 'marketShare'],
+                'Gestão Financeira': ['financialPlanning', 'financialIndicators', 'cashFlow', 'financialReserves', 'financialChallenges'],
+                'Gestão da Qualidade': ['qualityCertifications', 'qualityControl', 'customerSatisfaction', 'qualityProblems', 'qualityAudits'],
+                'Processo Produtivo': ['productionProcess', 'processDocumentation', 'automation', 'bottlenecks', 'inventoryManagement'],
+                'Observações Finais': ['finalComments']
+            };
+            
+            // Adiciona cada seção ao PDF
+            for (const sectionTitle in sections) {
+                // Verifica se há dados para esta seção
+                const hasData = sections[sectionTitle].some(field => data[field]);
+                
+                if (hasData) {
+                    // Adiciona título da seção
+                    doc.setFontSize(14);
+                    doc.setTextColor(44, 62, 80);
+                    doc.text(sectionTitle, 20, yPosition);
+                    yPosition += 10;
+                    
+                    // Adiciona os itens da seção
+                    doc.setFontSize(11);
+                    doc.setTextColor(0, 0, 0);
+                    
+                    for (const field of sections[sectionTitle]) {
+                        if (data[field]) {
+                            const label = getLabelText(field);
+                            const text = `${label}: ${data[field]}`;
+                            
+                            // Quebra o texto em várias linhas se necessário
+                            const splitText = doc.splitTextToSize(text, 170);
+                            doc.text(splitText, 20, yPosition);
+                            yPosition += splitText.length * 7;
+                            
+                            // Espaço entre itens
+                            yPosition += 5;
+                            
+                            // Verifica se precisa de nova página
+                            if (yPosition > 270) {
+                                doc.addPage();
+                                yPosition = 20;
+                            }
+                        }
+                    }
+                    
+                    // Espaço entre seções
+                    yPosition += 10;
+                }
+            }
+            
+            // Salva o PDF
+            doc.save(`Diagnostico_${companyName.replace(/\s+/g, '_')}.pdf`);
+        }
+        
+        // Inicializa a navegação
+        updateNavigation();
+    </script>
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assinatura Profissional</title>
+    <style>
+        .signature {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 30px 0;
+            padding: 20px 0;
+            border-top: 1px solid #e0e0e0;
+            color: #555;
+            text-align: center;
+            line-height: 1.6;
+        }
+        
+        .signature-name {
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 1.1em;
+        }
+        
+        .signature-title {
+            font-style: italic;
+            font-size: 0.9em;
+        }
+        
+        .signature-links {
+            margin-top: 10px;
+        }
+        
+        .signature-links a {
+            color: #3498db;
+            text-decoration: none;
+            margin: 0 10px;
+            font-size: 0.9em;
+        }
+        
+        .signature-links a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="signature">
+        <div class="signature-name">Prof. Me. Fábio Fernandes</div>
+        <div class="signature-title">Professor | Consultor Empresarial | Desenvolvimento de Negócios</div>
+        <div class="signature-links">
+            <a href="mailto:fabio.fernandes@exemplo.com">prof.fafer@bol.com.br</a>
+            <a href="https://www.linkedin.com/in/exemplo" target="_blank">www.linkedin.com/in/fábio-fernandes-437448a1</a>
+        </div>
+    </div>
+</body>
+</html>
+
+
+</body>
+</html>
