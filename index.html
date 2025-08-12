@@ -102,6 +102,7 @@
         input[type="text"],
         input[type="email"],
         input[type="tel"],
+        input[type="number"],
         textarea,
         select {
             width: 100%;
@@ -115,6 +116,7 @@
         input[type="text"]:focus,
         input[type="email"]:focus,
         input[type="tel"]:focus,
+        input[type="number"]:focus,
         textarea:focus,
         select:focus {
             border-color: var(--secondary-color);
@@ -206,6 +208,55 @@
             color: var(--dark-color);
         }
         
+        .swot-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .swot-box {
+            border: 2px solid var(--primary-color);
+            border-radius: 5px;
+            padding: 15px;
+            background-color: #f9f9f9;
+        }
+        
+        .swot-box h4 {
+            margin-top: 0;
+            text-align: center;
+            color: var(--primary-color);
+        }
+        
+        .strengths { border-color: #27ae60; }
+        .weaknesses { border-color: #e74c3c; }
+        .opportunities { border-color: #3498db; }
+        .threats { border-color: #f39c12; }
+        
+        .strengths h4 { color: #27ae60; }
+        .weaknesses h4 { color: #e74c3c; }
+        .opportunities h4 { color: #3498db; }
+        .threats h4 { color: #f39c12; }
+        
+        .insights-section {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #e8f4fc;
+            border-radius: 5px;
+            border-left: 5px solid var(--secondary-color);
+        }
+        
+        .insights-section h3 {
+            margin-top: 0;
+            color: var(--primary-color);
+        }
+        
+        .address-group {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 15px;
+        }
+        
         @media (max-width: 768px) {
             .container {
                 margin: 10px;
@@ -216,14 +267,22 @@
                 padding: 10px 15px;
                 font-size: 14px;
             }
+            
+            .swot-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .address-group {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>Diagnóstico Empresarial</h1>
-            <p class="subtitle">Preencha o formulário para gerar um relatório completo sobre sua empresa</p>
+            <h1>Diagnóstico Empresarial Completo</h1>
+            <p class="subtitle">Preencha o formulário para gerar um relatório completo com análise SWOT e insights estratégicos</p>
         </header>
         
         <div class="progress-container">
@@ -231,38 +290,74 @@
         </div>
         
         <form id="businessForm">
-            <!-- Seção 1: Informações Básicas -->
+            <!-- Seção 1: Informações Cadastrais Completas -->
             <div class="form-section active" id="section1">
-                <h2 class="section-title">Informações Básicas</h2>
+                <h2 class="section-title">Informações Cadastrais Completas</h2>
                 
                 <div class="form-group">
-                    <label for="companyName" class="required">Nome da Empresa</label>
+                    <label for="companyName" class="required">Nome da Empresa (Razão Social)</label>
                     <input type="text" id="companyName" name="companyName" required>
                 </div>
                 
                 <div class="form-group">
-                    <label for="contactName">Nome do Responsável</label>
-                    <input type="text" id="contactName" name="contactName">
+                    <label for="tradeName" class="required">Nome Fantasia</label>
+                    <input type="text" id="tradeName" name="tradeName" required>
                 </div>
                 
                 <div class="form-group">
-                    <label for="phone" class="required">Telefone de Contato</label>
-                    <input type="tel" id="phone" name="phone" required>
+                    <label for="cnpj" class="required">CNPJ</label>
+                    <input type="text" id="cnpj" name="cnpj" placeholder="00.000.000/0000-00" required>
                 </div>
                 
                 <div class="form-group">
-                    <label for="email" class="required">E-mail de Contato</label>
+                    <label for="taxRegime" class="required">Regime Tributário</label>
+                    <select id="taxRegime" name="taxRegime" required>
+                        <option value="">Selecione...</option>
+                        <option value="Simples Nacional">Simples Nacional</option>
+                        <option value="Lucro Presumido">Lucro Presumido</option>
+                        <option value="Lucro Real">Lucro Real</option>
+                        <option value="MEI">Microempreendedor Individual (MEI)</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="contactName" class="required">Nome do Responsável</label>
+                    <input type="text" id="contactName" name="contactName" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="contactPosition" class="required">Cargo/Função</label>
+                    <input type="text" id="contactPosition" name="contactPosition" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="phone" class="required">Telefone Celular</label>
+                    <input type="tel" id="phone" name="phone" placeholder="(00) 00000-0000" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="landline">Telefone Fixo</label>
+                    <input type="tel" id="landline" name="landline" placeholder="(00) 0000-0000">
+                </div>
+                
+                <div class="form-group">
+                    <label for="email" class="required">E-mail Corporativo</label>
                     <input type="email" id="email" name="email" required>
                 </div>
                 
                 <div class="form-group">
-                    <label for="businessSegment">Segmento de Atuação</label>
-                    <input type="text" id="businessSegment" name="businessSegment">
-                </div>
-                
-                <div class="form-group">
-                    <label for="timeInMarket">Tempo de Mercado (anos)</label>
-                    <input type="text" id="timeInMarket" name="timeInMarket">
+                    <label for="address" class="required">Endereço Completo</label>
+                    <div class="address-group">
+                        <input type="text" id="street" name="street" placeholder="Logradouro" required>
+                        <input type="text" id="number" name="number" placeholder="Número" required>
+                        <input type="text" id="complement" name="complement" placeholder="Complemento">
+                    </div>
+                    <div class="address-group" style="margin-top: 15px;">
+                        <input type="text" id="district" name="district" placeholder="Bairro" required>
+                        <input type="text" id="city" name="city" placeholder="Cidade" required>
+                        <input type="text" id="state" name="state" placeholder="UF" maxlength="2" required>
+                    </div>
+                    <input type="text" id="zipCode" name="zipCode" placeholder="CEP" style="margin-top: 15px;" required>
                 </div>
                 
                 <div class="btn-container">
@@ -276,17 +371,17 @@
                 
                 <div class="form-group">
                     <label for="mission">Qual é a missão da empresa?</label>
-                    <textarea id="mission" name="mission"></textarea>
+                    <textarea id="mission" name="mission" placeholder="Exemplo: 'Proporcionar soluções inovadoras em tecnologia que melhorem a vida das pessoas...'"></textarea>
                 </div>
                 
                 <div class="form-group">
                     <label for="vision">Qual é a visão da empresa?</label>
-                    <textarea id="vision" name="vision"></textarea>
+                    <textarea id="vision" name="vision" placeholder="Exemplo: 'Ser reconhecida como líder em nosso segmento até 2030...'"></textarea>
                 </div>
                 
                 <div class="form-group">
                     <label for="values">Quais são os valores da empresa?</label>
-                    <textarea id="values" name="values"></textarea>
+                    <textarea id="values" name="values" placeholder="Exemplo: 'Integridade, Inovação, Qualidade, Respeito ao Cliente...'"></textarea>
                 </div>
                 
                 <div class="form-group">
@@ -311,7 +406,7 @@
                 
                 <div class="form-group">
                     <label for="revenueModel">Qual é o modelo de receita da empresa?</label>
-                    <textarea id="revenueModel" name="revenueModel"></textarea>
+                    <textarea id="revenueModel" name="revenueModel" placeholder="Exemplo: 'Venda direta de produtos, assinaturas mensais, licenciamento de software...'"></textarea>
                 </div>
                 
                 <div class="form-group">
@@ -326,12 +421,12 @@
                 
                 <div class="form-group">
                     <label for="keyResources">Quais são os recursos-chave necessários para o seu negócio?</label>
-                    <textarea id="keyResources" name="keyResources"></textarea>
+                    <textarea id="keyResources" name="keyResources" placeholder="Exemplo: 'Equipe qualificada, tecnologia proprietária, parcerias estratégicas...'"></textarea>
                 </div>
                 
                 <div class="form-group">
                     <label for="keyPartners">Quem são seus parceiros-chave?</label>
-                    <textarea id="keyPartners" name="keyPartners"></textarea>
+                    <textarea id="keyPartners" name="keyPartners" placeholder="Exemplo: 'Fornecedores exclusivos, distribuidores, parceiros tecnológicos...'"></textarea>
                 </div>
                 
                 <div class="btn-container">
@@ -346,27 +441,27 @@
                 
                 <div class="form-group">
                     <label for="salesChannels">Quais canais de venda são utilizados atualmente?</label>
-                    <textarea id="salesChannels" name="salesChannels"></textarea>
+                    <textarea id="salesChannels" name="salesChannels" placeholder="Exemplo: 'Loja física, e-commerce, marketplaces, venda direta...'"></textarea>
                 </div>
                 
                 <div class="form-group">
                     <label for="pricingStrategy">Qual é a estratégia de precificação dos produtos/serviços?</label>
-                    <textarea id="pricingStrategy" name="pricingStrategy"></textarea>
+                    <textarea id="pricingStrategy" name="pricingStrategy" placeholder="Exemplo: 'Preço competitivo, premium, descontos por volume...'"></textarea>
                 </div>
                 
                 <div class="form-group">
                     <label for="marketPosition">Como sua empresa se posiciona frente à concorrência?</label>
-                    <textarea id="marketPosition" name="marketPosition"></textarea>
+                    <textarea id="marketPosition" name="marketPosition" placeholder="Exemplo: 'Líder em preço, qualidade superior, atendimento personalizado...'"></textarea>
                 </div>
                 
                 <div class="form-group">
                     <label for="customerAcquisition">Quais ações são realizadas para conquistar novos clientes?</label>
-                    <textarea id="customerAcquisition" name="customerAcquisition"></textarea>
+                    <textarea id="customerAcquisition" name="customerAcquisition" placeholder="Exemplo: 'Marketing digital, indicações, participação em feiras...'"></textarea>
                 </div>
                 
                 <div class="form-group">
                     <label for="marketShare">Existe alguma meta de participação de mercado (market share)? Se sim, qual?</label>
-                    <textarea id="marketShare" name="marketShare"></textarea>
+                    <textarea id="marketShare" name="marketShare" placeholder="Exemplo: 'Alcançar 15% do mercado regional até o final do ano...'"></textarea>
                 </div>
                 
                 <div class="btn-container">
@@ -391,12 +486,12 @@
                 
                 <div class="form-group">
                     <label for="financialIndicators">Quais são os principais indicadores financeiros acompanhados?</label>
-                    <textarea id="financialIndicators" name="financialIndicators"></textarea>
+                    <textarea id="financialIndicators" name="financialIndicators" placeholder="Exemplo: 'Faturamento, margem de lucro, ROI, ticket médio...'"></textarea>
                 </div>
                 
                 <div class="form-group">
                     <label for="cashFlow">Existe controle de fluxo de caixa? Com que frequência é atualizado?</label>
-                    <textarea id="cashFlow" name="cashFlow"></textarea>
+                    <textarea id="cashFlow" name="cashFlow" placeholder="Exemplo: 'Sim, atualizado semanalmente com projeção para 3 meses...'"></textarea>
                 </div>
                 
                 <div class="form-group">
@@ -411,7 +506,7 @@
                 
                 <div class="form-group">
                     <label for="financialChallenges">Quais são os maiores desafios financeiros enfrentados atualmente?</label>
-                    <textarea id="financialChallenges" name="financialChallenges"></textarea>
+                    <textarea id="financialChallenges" name="financialChallenges" placeholder="Exemplo: 'Gerenciamento de custos fixos, inadimplência, sazonalidade...'"></textarea>
                 </div>
                 
                 <div class="btn-container">
@@ -420,38 +515,64 @@
                 </div>
             </div>
             
-            <!-- Seção 6: Gestão da Qualidade -->
+            <!-- Seção 6: Análise SWOT -->
             <div class="form-section" id="section6">
-                <h2 class="section-title">Gestão da Qualidade</h2>
+                <h2 class="section-title">Análise SWOT</h2>
+                <p>Preencha os campos abaixo para identificarmos os pontos fortes, fracos, oportunidades e ameaças do seu negócio.</p>
                 
-                <div class="form-group">
-                    <label for="qualityCertifications">Existem padrões ou certificações de qualidade adotados pela empresa?</label>
-                    <textarea id="qualityCertifications" name="qualityCertifications"></textarea>
+                <div class="swot-grid">
+                    <div class="swot-box strengths">
+                        <h4>Forças (Strengths)</h4>
+                        <label for="strengths1">1. Quais são os principais pontos fortes da sua empresa?</label>
+                        <textarea id="strengths1" name="strengths1" placeholder="Exemplo: 'Equipe altamente qualificada, marca reconhecida...'"></textarea>
+                        
+                        <label for="strengths2">2. Quais vantagens competitivas você possui?</label>
+                        <textarea id="strengths2" name="strengths2"></textarea>
+                        
+                        <label for="strengths3">3. Quais recursos exclusivos sua empresa tem?</label>
+                        <textarea id="strengths3" name="strengths3"></textarea>
+                    </div>
+                    
+                    <div class="swot-box weaknesses">
+                        <h4>Fraquezas (Weaknesses)</h4>
+                        <label for="weaknesses1">1. Quais são as principais limitações da sua empresa?</label>
+                        <textarea id="weaknesses1" name="weaknesses1" placeholder="Exemplo: 'Falta de capital para investimento, dependência de poucos clientes...'"></textarea>
+                        
+                        <label for="weaknesses2">2. Quais áreas precisam ser melhoradas?</label>
+                        <textarea id="weaknesses2" name="weaknesses2"></textarea>
+                        
+                        <label for="weaknesses3">3. Quais recursos faltam para seu negócio crescer?</label>
+                        <textarea id="weaknesses3" name="weaknesses3"></textarea>
+                    </div>
+                    
+                    <div class="swot-box opportunities">
+                        <h4>Oportunidades (Opportunities)</h4>
+                        <label for="opportunities1">1. Quais tendências de mercado podem beneficiar seu negócio?</label>
+                        <textarea id="opportunities1" name="opportunities1" placeholder="Exemplo: 'Crescimento do e-commerce, mudanças regulatórias favoráveis...'"></textarea>
+                        
+                        <label for="opportunities2">2. Quais necessidades não atendidas você pode explorar?</label>
+                        <textarea id="opportunities2" name="opportunities2"></textarea>
+                        
+                        <label for="opportunities3">3. Quais parcerias poderiam trazer novos negócios?</label>
+                        <textarea id="opportunities3" name="opportunities3"></textarea>
+                    </div>
+                    
+                    <div class="swot-box threats">
+                        <h4>Ameaças (Threats)</h4>
+                        <label for="threats1">1. Quais são os principais riscos para seu negócio?</label>
+                        <textarea id="threats1" name="threats1" placeholder="Exemplo: 'Concorrência acirrada, mudanças tecnológicas, crise econômica...'"></textarea>
+                        
+                        <label for="threats2">2. Quais obstáculos externos podem afetar sua empresa?</label>
+                        <textarea id="threats2" name="threats2"></textarea>
+                        
+                        <label for="threats3">3. Quais mudanças no mercado preocupam você?</label>
+                        <textarea id="threats3" name="threats3"></textarea>
+                    </div>
                 </div>
                 
                 <div class="form-group">
-                    <label for="qualityControl">Como é feito o controle de qualidade dos produtos ou serviços?</label>
-                    <textarea id="qualityControl" name="qualityControl"></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label for="customerSatisfaction">Há indicadores de satisfação do cliente? Como são medidos?</label>
-                    <textarea id="customerSatisfaction" name="customerSatisfaction"></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label for="qualityProblems">Quais são os principais problemas de qualidade enfrentados?</label>
-                    <textarea id="qualityProblems" name="qualityProblems"></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label for="qualityAudits">A empresa realiza auditorias ou revisões periódicas de processos?</label>
-                    <select id="qualityAudits" name="qualityAudits">
-                        <option value="">Selecione...</option>
-                        <option value="Sim, regularmente">Sim, regularmente</option>
-                        <option value="Ocasionalmente">Ocasionalmente</option>
-                        <option value="Não">Não</option>
-                    </select>
+                    <label for="swotAnalysis">Com base nas respostas acima, como você avalia o posicionamento estratégico da sua empresa?</label>
+                    <textarea id="swotAnalysis" name="swotAnalysis" placeholder="Faça uma breve análise cruzando os pontos identificados..."></textarea>
                 </div>
                 
                 <div class="btn-container">
@@ -500,12 +621,17 @@
                 </div>
             </div>
             
-            <!-- Seção 8: Resumo e Finalização -->
+            <!-- Seção 8: Resumo, Insights e Finalização -->
             <div class="form-section" id="section8">
-                <h2 class="section-title">Resumo e Finalização</h2>
+                <h2 class="section-title">Resumo, Insights e Finalização</h2>
                 
                 <div class="summary-section" id="summarySection">
                     <h3>Resumo das Informações</h3>
+                    <!-- O conteúdo será preenchido dinamicamente pelo JavaScript -->
+                </div>
+                
+                <div class="insights-section" id="insightsSection">
+                    <h3>Insights e Sugestões Estratégicas</h3>
                     <!-- O conteúdo será preenchido dinamicamente pelo JavaScript -->
                 </div>
                 
@@ -567,9 +693,10 @@
                     currentSection++;
                     document.getElementById(`section${currentSection}`).classList.add('active');
                     
-                    // Se chegou na última seção, mostra o resumo
+                    // Se chegou na última seção, mostra o resumo e insights
                     if (currentSection === totalSections) {
                         showSummary();
+                        generateInsights();
                     }
                     
                     updateNavigation();
@@ -598,6 +725,7 @@
                 
                 if (currentSection === totalSections) {
                     showSummary();
+                    generateInsights();
                 }
                 
                 updateNavigation();
@@ -608,12 +736,29 @@
         // Valida os campos obrigatórios da seção atual
         function validateCurrentSection() {
             if (currentSection === 1) {
-                const companyName = document.getElementById('companyName').value.trim();
-                const phone = document.getElementById('phone').value.trim();
-                const email = document.getElementById('email').value.trim();
+                const requiredFields = ['companyName', 'tradeName', 'cnpj', 'taxRegime', 'contactName', 'contactPosition', 'phone', 'email', 'street', 'number', 'district', 'city', 'state', 'zipCode'];
+                let isValid = true;
                 
-                if (!companyName || !phone || !email) {
-                    alert('Por favor, preencha os campos obrigatórios da seção.');
+                requiredFields.forEach(field => {
+                    const element = document.getElementById(field);
+                    if (!element.value.trim()) {
+                        element.style.borderColor = '#e74c3c';
+                        isValid = false;
+                    } else {
+                        element.style.borderColor = '#ddd';
+                    }
+                });
+                
+                if (!isValid) {
+                    alert('Por favor, preencha todos os campos obrigatórios da seção de informações cadastrais.');
+                    return false;
+                }
+                
+                // Validação básica de CNPJ
+                const cnpj = document.getElementById('cnpj').value.trim();
+                if (cnpj.length < 14) {
+                    alert('Por favor, insira um CNPJ válido com 14 dígitos.');
+                    document.getElementById('cnpj').style.borderColor = '#e74c3c';
                     return false;
                 }
             }
@@ -637,28 +782,177 @@
             
             // Adiciona os itens ao resumo
             for (const key in data) {
+                // Não mostra os campos da SWOT no resumo principal (serão mostrados nos insights)
+                if (!key.startsWith('strengths') && !key.startsWith('weaknesses') && 
+                    !key.startsWith('opportunities') && !key.startsWith('threats') && key !== 'swotAnalysis') {
+                    const div = document.createElement('div');
+                    div.className = 'summary-item';
+                    
+                    const strong = document.createElement('strong');
+                    strong.textContent = getLabelText(key) + ':';
+                    div.appendChild(strong);
+                    
+                    const span = document.createElement('span');
+                    span.textContent = data[key];
+                    div.appendChild(span);
+                    
+                    summarySection.appendChild(div);
+                }
+            }
+        }
+        
+        // Gera insights estratégicos baseados na análise SWOT
+        function generateInsights() {
+            const insightsSection = document.getElementById('insightsSection');
+            insightsSection.innerHTML = '<h3>Insights e Sugestões Estratégicas</h3>';
+            
+            // Coleta os dados da SWOT
+            const swotData = {
+                strengths: [],
+                weaknesses: [],
+                opportunities: [],
+                threats: []
+            };
+            
+            // Preenche os dados da SWOT
+            for (let i = 1; i <= 3; i++) {
+                if (document.getElementById(`strengths${i}`).value.trim()) {
+                    swotData.strengths.push(document.getElementById(`strengths${i}`).value.trim());
+                }
+                if (document.getElementById(`weaknesses${i}`).value.trim()) {
+                    swotData.weaknesses.push(document.getElementById(`weaknesses${i}`).value.trim());
+                }
+                if (document.getElementById(`opportunities${i}`).value.trim()) {
+                    swotData.opportunities.push(document.getElementById(`opportunities${i}`).value.trim());
+                }
+                if (document.getElementById(`threats${i}`).value.trim()) {
+                    swotData.threats.push(document.getElementById(`threats${i}`).value.trim());
+                }
+            }
+            
+            // Gera insights com base nas combinações SWOT
+            const insights = [];
+            
+            // SO Strategies (Strengths + Opportunities)
+            if (swotData.strengths.length > 0 && swotData.opportunities.length > 0) {
+                insights.push({
+                    title: "Estratégias SO (Forças + Oportunidades):",
+                    content: `Você pode aproveitar suas forças (${swotData.strengths.join(', ')}) para explorar as oportunidades identificadas (${swotData.opportunities.join(', ')}). Considere alocar mais recursos nessas áreas para maximizar seu potencial de crescimento.`
+                });
+            }
+            
+            // ST Strategies (Strengths + Threats)
+            if (swotData.strengths.length > 0 && swotData.threats.length > 0) {
+                insights.push({
+                    title: "Estratégias ST (Forças + Ameaças):",
+                    content: `Use suas forças (${swotData.strengths.join(', ')}) para se proteger contra as ameaças identificadas (${swotData.threats.join(', ')}). Desenvolva planos de contingência que aproveitem seus pontos fortes para mitigar riscos.`
+                });
+            }
+            
+            // WO Strategies (Weaknesses + Opportunities)
+            if (swotData.weaknesses.length > 0 && swotData.opportunities.length > 0) {
+                insights.push({
+                    title: "Estratégias WO (Fraquezas + Oportunidades):",
+                    content: `Para aproveitar as oportunidades (${swotData.opportunities.join(', ')}), você precisa superar suas fraquezas (${swotData.weaknesses.join(', ')}). Considere investir em treinamento, parcerias ou tecnologia para transformar essas fraquezas em pontos fortes.`
+                });
+            }
+            
+            // WT Strategies (Weaknesses + Threats)
+            if (swotData.weaknesses.length > 0 && swotData.threats.length > 0) {
+                insights.push({
+                    title: "Estratégias WT (Fraquezas + Ameaças):",
+                    content: `As combinações entre suas fraquezas (${swotData.weaknesses.join(', ')}) e as ameaças externas (${swotData.threats.join(', ')}) representam seus maiores riscos. Desenvolva planos defensivos e considere diversificar seus negócios para reduzir vulnerabilidades.`
+                });
+            }
+            
+            // Adiciona insights genéricos se não houver dados suficientes para análise cruzada
+            if (insights.length === 0) {
+                if (swotData.strengths.length > 0) {
+                    insights.push({
+                        title: "Seus Pontos Fortes:",
+                        content: `Sua empresa possui forças importantes (${swotData.strengths.join(', ')}). Considere como você pode aproveitá-las ainda mais para crescer e se diferenciar da concorrência.`
+                    });
+                }
+                
+                if (swotData.weaknesses.length > 0) {
+                    insights.push({
+                        title: "Áreas para Melhoria:",
+                        content: `Identificamos algumas fraquezas (${swotData.weaknesses.join(', ')}) que merecem atenção. Desenvolva um plano de ação para transformar essas fraquezas em pontos fortes ou, pelo menos, neutralizar seu impacto.`
+                    });
+                }
+            }
+            
+            // Adiciona os insights ao HTML
+            insights.forEach(insight => {
                 const div = document.createElement('div');
                 div.className = 'summary-item';
+                div.style.marginBottom = '20px';
                 
                 const strong = document.createElement('strong');
-                strong.textContent = getLabelText(key) + ':';
+                strong.textContent = insight.title;
                 div.appendChild(strong);
                 
-                const span = document.createElement('span');
-                span.textContent = data[key];
-                div.appendChild(span);
+                const p = document.createElement('p');
+                p.textContent = insight.content;
+                p.style.marginTop = '5px';
+                div.appendChild(p);
                 
-                summarySection.appendChild(div);
+                insightsSection.appendChild(div);
+            });
+            
+            // Adiciona recomendações gerais
+            if (insights.length > 0) {
+                const generalDiv = document.createElement('div');
+                generalDiv.className = 'summary-item';
+                generalDiv.style.marginTop = '30px';
+                
+                const strong = document.createElement('strong');
+                strong.textContent = "Recomendações Gerais:";
+                generalDiv.appendChild(strong);
+                
+                const ul = document.createElement('ul');
+                ul.style.marginTop = '5px';
+                ul.style.paddingLeft = '20px';
+                
+                const recommendations = [
+                    "Monitore regularmente o ambiente externo para identificar novas oportunidades e ameaças",
+                    "Desenvolva indicadores para acompanhar a evolução de suas fraquezas",
+                    "Crie um plano de ação com metas claras para capitalizar suas forças",
+                    "Considere realizar essa análise SWOT trimestralmente para manter sua estratégia atualizada",
+                    "Envolva diferentes departamentos na análise para obter perspectivas diversas"
+                ];
+                
+                recommendations.forEach(rec => {
+                    const li = document.createElement('li');
+                    li.textContent = rec;
+                    li.style.marginBottom = '5px';
+                    ul.appendChild(li);
+                });
+                
+                generalDiv.appendChild(ul);
+                insightsSection.appendChild(generalDiv);
             }
         }
         
         // Obtém o texto do label para cada campo
         function getLabelText(fieldName) {
             const labels = {
-                'companyName': 'Nome da Empresa',
+                'companyName': 'Razão Social',
+                'tradeName': 'Nome Fantasia',
+                'cnpj': 'CNPJ',
+                'taxRegime': 'Regime Tributário',
                 'contactName': 'Nome do Responsável',
-                'phone': 'Telefone de Contato',
-                'email': 'E-mail de Contato',
+                'contactPosition': 'Cargo/Função',
+                'phone': 'Telefone Celular',
+                'landline': 'Telefone Fixo',
+                'email': 'E-mail Corporativo',
+                'street': 'Logradouro',
+                'number': 'Número',
+                'complement': 'Complemento',
+                'district': 'Bairro',
+                'city': 'Cidade',
+                'state': 'UF',
+                'zipCode': 'CEP',
                 'businessSegment': 'Segmento de Atuação',
                 'timeInMarket': 'Tempo de Mercado',
                 'mission': 'Missão da Empresa',
@@ -691,7 +985,8 @@
                 'automation': 'Automação na Produção',
                 'bottlenecks': 'Gargalos ou Ineficiências',
                 'inventoryManagement': 'Gestão de Estoque e Logística',
-                'finalComments': 'Observações Adicionais'
+                'finalComments': 'Observações Adicionais',
+                'swotAnalysis': 'Análise SWOT Preliminar'
             };
             
             return labels[fieldName] || fieldName;
@@ -708,7 +1003,7 @@
             
             // Título do relatório
             const companyName = document.getElementById('companyName').value.trim() || 'Empresa';
-            doc.text(`Relatório de Diagnóstico: ${companyName}`, 105, 20, { align: 'center' });
+            doc.text(`Relatório de Diagnóstico Completo: ${companyName}`, 105, 20, { align: 'center' });
             
             doc.setFontSize(12);
             doc.text('Gerado em: ' + new Date().toLocaleDateString(), 105, 30, { align: 'center' });
@@ -730,12 +1025,12 @@
             
             // Organiza por seções
             const sections = {
-                'Informações Básicas': ['companyName', 'contactName', 'phone', 'email', 'businessSegment', 'timeInMarket'],
+                'Informações Cadastrais': ['companyName', 'tradeName', 'cnpj', 'taxRegime', 'contactName', 'contactPosition', 
+                                         'phone', 'landline', 'email', 'street', 'number', 'complement', 'district', 'city', 'state', 'zipCode'],
                 'Missão, Visão e Valores': ['mission', 'vision', 'values', 'marketProblem', 'competitors'],
                 'Modelo de Negócios': ['revenueModel', 'strategicObjectives', 'differentiation', 'keyResources', 'keyPartners'],
                 'Estratégias de Vendas': ['salesChannels', 'pricingStrategy', 'marketPosition', 'customerAcquisition', 'marketShare'],
                 'Gestão Financeira': ['financialPlanning', 'financialIndicators', 'cashFlow', 'financialReserves', 'financialChallenges'],
-                'Gestão da Qualidade': ['qualityCertifications', 'qualityControl', 'customerSatisfaction', 'qualityProblems', 'qualityAudits'],
                 'Processo Produtivo': ['productionProcess', 'processDocumentation', 'automation', 'bottlenecks', 'inventoryManagement'],
                 'Observações Finais': ['finalComments']
             };
@@ -782,59 +1077,254 @@
                 }
             }
             
+            // Adiciona a análise SWOT ao PDF
+            if (data['swotAnalysis'] || data['strengths1'] || data['weaknesses1'] || data['opportunities1'] || data['threats1']) {
+                doc.addPage();
+                yPosition = 20;
+                
+                doc.setFontSize(14);
+                doc.setTextColor(44, 62, 80);
+                doc.text('Análise SWOT e Insights Estratégicos', 105, yPosition, { align: 'center' });
+                yPosition += 15;
+                
+                // Adiciona a análise SWOT do usuário
+                if (data['swotAnalysis']) {
+                    doc.setFontSize(12);
+                    doc.text('Análise Preliminar:', 20, yPosition);
+                    yPosition += 7;
+                    
+                    doc.setFontSize(11);
+                    const analysisText = doc.splitTextToSize(data['swotAnalysis'], 170);
+                    doc.text(analysisText, 20, yPosition);
+                    yPosition += analysisText.length * 7 + 10;
+                }
+                
+                // Cria a matriz SWOT
+                doc.setFontSize(12);
+                doc.text('Matriz SWOT:', 20, yPosition);
+                yPosition += 10;
+                
+                // Configurações para a tabela SWOT
+                const swotData = {
+                    strengths: [],
+                    weaknesses: [],
+                    opportunities: [],
+                    threats: []
+                };
+                
+                // Preenche os dados da SWOT
+                for (let i = 1; i <= 3; i++) {
+                    if (data[`strengths${i}`]) swotData.strengths.push(data[`strengths${i}`]);
+                    if (data[`weaknesses${i}`]) swotData.weaknesses.push(data[`weaknesses${i}`]);
+                    if (data[`opportunities${i}`]) swotData.opportunities.push(data[`opportunities${i}`]);
+                    if (data[`threats${i}`]) swotData.threats.push(data[`threats${i}`]);
+                }
+                
+                // Adiciona cada categoria da SWOT
+                const swotCategories = [
+                    { title: 'Forças (Strengths)', data: swotData.strengths, color: [39, 174, 96] },
+                    { title: 'Fraquezas (Weaknesses)', data: swotData.weaknesses, color: [231, 76, 60] },
+                    { title: 'Oportunidades (Opportunities)', data: swotData.opportunities, color: [52, 152, 219] },
+                    { title: 'Ameaças (Threats)', data: swotData.threats, color: [243, 156, 18] }
+                ];
+                
+                let xPosition = 20;
+                const boxWidth = 85;
+                const boxHeight = 60;
+                
+                for (const category of swotCategories) {
+                    // Desenha o quadro
+                    doc.setDrawColor(...category.color);
+                    doc.rect(xPosition, yPosition, boxWidth, boxHeight);
+                    
+                    // Adiciona o título
+                    doc.setFontSize(10);
+                    doc.setTextColor(...category.color);
+                    doc.text(category.title, xPosition + boxWidth/2, yPosition + 8, { align: 'center' });
+                    
+                    // Adiciona os itens
+                    doc.setFontSize(8);
+                    doc.setTextColor(0, 0, 0);
+                    
+                    let itemY = yPosition + 15;
+                    for (const item of category.data) {
+                        const itemText = doc.splitTextToSize('• ' + item, boxWidth - 10);
+                        doc.text(itemText, xPosition + 5, itemY);
+                        itemY += itemText.length * 4 + 2;
+                        
+                        // Verifica se o texto está saindo do quadro
+                        if (itemY > yPosition + boxHeight - 5) {
+                            break; // Não adiciona mais itens se não couberem
+                        }
+                    }
+                    
+                    xPosition += boxWidth;
+                    
+                    // Verifica se precisa ir para a próxima linha
+                    if (xPosition > 120) {
+                        xPosition = 20;
+                        yPosition += boxHeight + 10;
+                        
+                        // Verifica se precisa de nova página
+                        if (yPosition > 250) {
+                            doc.addPage();
+                            yPosition = 20;
+                            xPosition = 20;
+                        }
+                    }
+                }
+                
+                yPosition += boxHeight + 15;
+                
+                // Adiciona insights estratégicos
+                if (swotData.strengths.length > 0 || swotData.weaknesses.length > 0 || 
+                    swotData.opportunities.length > 0 || swotData.threats.length > 0) {
+                    
+                    doc.setFontSize(12);
+                    doc.setTextColor(44, 62, 80);
+                    doc.text('Insights Estratégicos:', 20, yPosition);
+                    yPosition += 10;
+                    
+                    // Gera insights com base nas combinações SWOT
+                    const insights = [];
+                    
+                    // SO Strategies (Strengths + Opportunities)
+                    if (swotData.strengths.length > 0 && swotData.opportunities.length > 0) {
+                        insights.push(`Estratégias SO (Forças + Oportunidades): Aproveite suas forças (${swotData.strengths.slice(0, 2).join(', ')}) para explorar as oportunidades identificadas (${swotData.opportunities.slice(0, 2).join(', ')}).`);
+                    }
+                    
+                    // ST Strategies (Strengths + Threats)
+                    if (swotData.strengths.length > 0 && swotData.threats.length > 0) {
+                        insights.push(`Estratégias ST (Forças + Ameaças): Use suas forças (${swotData.strengths.slice(0, 2).join(', ')}) para mitigar as ameaças (${swotData.threats.slice(0, 2).join(', ')}).`);
+                    }
+                    
+                    // WO Strategies (Weaknesses + Opportunities)
+                    if (swotData.weaknesses.length > 0 && swotData.opportunities.length > 0) {
+                        insights.push(`Estratégias WO (Fraquezas + Oportunidades): Supere fraquezas (${swotData.weaknesses.slice(0, 2).join(', ')}) para aproveitar oportunidades (${swotData.opportunities.slice(0, 2).join(', ')}).`);
+                    }
+                    
+                    // WT Strategies (Weaknesses + Threats)
+                    if (swotData.weaknesses.length > 0 && swotData.threats.length > 0) {
+                        insights.push(`Estratégias WT (Fraquezas + Ameaças): Desenvolva planos defensivos para proteger-se de ameaças (${swotData.threats.slice(0, 2).join(', ')}) que exploram suas fraquezas (${swotData.weaknesses.slice(0, 2).join(', ')}).`);
+                    }
+                    
+                    // Adiciona os insights ao PDF
+                    doc.setFontSize(10);
+                    doc.setTextColor(0, 0, 0);
+                    
+                    for (const insight of insights) {
+                        const insightText = doc.splitTextToSize(insight, 170);
+                        doc.text(insightText, 20, yPosition);
+                        yPosition += insightText.length * 5 + 5;
+                        
+                        if (yPosition > 270) {
+                            doc.addPage();
+                            yPosition = 20;
+                        }
+                    }
+                    
+                    // Adiciona recomendações gerais
+                    if (insights.length > 0) {
+                        yPosition += 10;
+                        doc.setFontSize(12);
+                        doc.setTextColor(44, 62, 80);
+                        doc.text('Recomendações Gerais:', 20, yPosition);
+                        yPosition += 10;
+                        
+                        const recommendations = [
+                            "Monitore regularmente o ambiente externo para novas oportunidades/ameaças",
+                            "Desenvolva indicadores para acompanhar a evolução de suas fraquezas",
+                            "Crie um plano de ação para capitalizar suas forças",
+                            "Realize análises SWOT trimestralmente para manter a estratégia atualizada",
+                            "Envolva diferentes departamentos para obter perspectivas diversas"
+                        ];
+                        
+                        doc.setFontSize(10);
+                        doc.setTextColor(0, 0, 0);
+                        
+                        for (const rec of recommendations) {
+                            doc.text('• ' + rec, 25, yPosition);
+                            yPosition += 7;
+                            
+                            if (yPosition > 270) {
+                                doc.addPage();
+                                yPosition = 20;
+                            }
+                        }
+                    }
+                }
+            }
+            
             // Salva o PDF
-            doc.save(`Diagnostico_${companyName.replace(/\s+/g, '_')}.pdf`);
+            doc.save(`Diagnostico_Completo_${companyName.replace(/\s+/g, '_')}.pdf`);
         }
         
         // Inicializa a navegação
         updateNavigation();
+        
+        // Máscara para CNPJ
+        document.getElementById('cnpj').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            
+            if (value.length > 12) {
+                value = value.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, '$1.$2.$3/$4-$5');
+            } else if (value.length > 8) {
+                value = value.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})/, '$1.$2.$3/$4');
+            } else if (value.length > 5) {
+                value = value.replace(/^(\d{2})(\d{3})(\d{3})/, '$1.$2.$3');
+            } else if (value.length > 2) {
+                value = value.replace(/^(\d{2})(\d{3})/, '$1.$2');
+            }
+            
+            e.target.value = value;
+        });
+        
+        // Máscara para telefone
+        document.getElementById('phone').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            
+            if (value.length > 10) {
+                value = value.replace(/^(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+            } else if (value.length > 6) {
+                value = value.replace(/^(\d{2})(\d{4})(\d{0,4})/, '($1) $2-$3');
+            } else if (value.length > 2) {
+                value = value.replace(/^(\d{2})(\d{0,5})/, '($1) $2');
+            } else {
+                value = value.replace(/^(\d{0,2})/, '($1');
+            }
+            
+            e.target.value = value;
+        });
+        
+        // Máscara para telefone fixo
+        document.getElementById('landline').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            
+            if (value.length > 10) {
+                value = value.replace(/^(\d{2})(\d{4})(\d{4})/, '($1) $2-$3');
+            } else if (value.length > 6) {
+                value = value.replace(/^(\d{2})(\d{4})(\d{0,4})/, '($1) $2-$3');
+            } else if (value.length > 2) {
+                value = value.replace(/^(\d{2})(\d{0,4})/, '($1) $2');
+            } else {
+                value = value.replace(/^(\d{0,2})/, '($1');
+            }
+            
+            e.target.value = value;
+        });
+        
+        // Máscara para CEP
+        document.getElementById('zipCode').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            
+            if (value.length > 5) {
+                value = value.replace(/^(\d{5})(\d{3})/, '$1-$2');
+            }
+            
+            e.target.value = value;
+        });
     </script>
 
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Assinatura Profissional</title>
-    <style>
-        .signature {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 30px 0;
-            padding: 20px 0;
-            border-top: 1px solid #e0e0e0;
-            color: #555;
-            text-align: center;
-            line-height: 1.6;
-        }
-        
-        .signature-name {
-            font-weight: 600;
-            color: #2c3e50;
-            font-size: 1.1em;
-        }
-        
-        .signature-title {
-            font-style: italic;
-            font-size: 0.9em;
-        }
-        
-        .signature-links {
-            margin-top: 10px;
-        }
-        
-        .signature-links a {
-            color: #3498db;
-            text-decoration: none;
-            margin: 0 10px;
-            font-size: 0.9em;
-        }
-        
-        .signature-links a:hover {
-            text-decoration: underline;
-        }
-    </style>
-</head>
-<body>
     <div class="signature">
         <div class="signature-name">Prof. Me. Fábio Fernandes</div>
         <div class="signature-title">Professor | Consultor Empresarial | Desenvolvimento de Negócios</div>
@@ -843,9 +1333,5 @@
             <a href="https://www.linkedin.com/in/exemplo" target="_blank">www.linkedin.com/in/fábio-fernandes-437448a1</a>
         </div>
     </div>
-</body>
-</html>
-
-
 </body>
 </html>
